@@ -1,0 +1,31 @@
+<hibernate-configuration>
+    <session-factory>
+        <!-- Driver dhe URL për MySQL -->
+        <property name="hibernate.connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/makinaQera?createDatabaseIfNotExist=true</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">#GeraViti2003#</property>
+
+        <!-- Dialect -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQL8Dialect</property>
+
+        <!-- Auto create/update DB schema -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Show SQL queries -->
+        <property name="hibernate.show_sql">false</property>
+        <property name="hibernate.format_sql">false</property>
+
+        <!-- Entitetet -->
+        <mapping class="com.makina.Entity.Customer"/>
+        <mapping class="com.makina.Entity.Vehicle"/>
+        <mapping class="com.makina.Entity.Rental"/>
+        <mapping class="com.makina.Entity.Payment"/>
+
+
+
+
+
+
+    </session-factory>
+</hibernate-configuration>
