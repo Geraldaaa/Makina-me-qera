@@ -1,6 +1,8 @@
 package com.makina.Entity;
 
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +27,8 @@ public class Vehicle {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+
+
     public Vehicle() {
     }
 
@@ -34,6 +38,7 @@ public class Vehicle {
         this.year = year;
         this.dailyRate = dailyRate;
         this.status = status;
+
     }
 
     public Long getId() {
@@ -85,5 +90,27 @@ public class Vehicle {
     }
 
 
+    @Override
+    public String toString() {
+        return "Vehicle{" +
+                "id=" + id +
+                ", rentals=" + rentals +
+                ", brand='" + brand + '\'' +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", dailyRate=" + dailyRate +
+                ", status=" + status +
+                '}';
     }
+
+    public List<Rental> getRentals() {
+        return rentals;
+    }
+
+    public void setRentals(List<Rental> rentals) {
+        this.rentals = rentals;
+    }
+
+
+}
 

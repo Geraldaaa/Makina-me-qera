@@ -2,10 +2,12 @@ package com.makina.Repository;
 
 import com.makina.Entity.Customer;
 import com.makina.Entity.Rental;
+import com.makina.Entity.Vehicle;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RentalRepository {
@@ -68,6 +70,11 @@ public class RentalRepository {
         return rentals;
     }
 
+
+    public void rentVehicle(Vehicle vehicle){
+
+
+    }
 
 
 }

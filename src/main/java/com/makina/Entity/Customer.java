@@ -22,6 +22,7 @@ public class Customer {
     private List<Rental> rentals = new ArrayList<>();
 
 
+
     public Customer(){}
 
 

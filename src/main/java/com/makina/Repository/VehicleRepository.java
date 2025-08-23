@@ -1,6 +1,7 @@
 package com.makina.Repository;
 
 import com.makina.Entity.Customer;
+import com.makina.Entity.Status;
 import com.makina.Entity.Vehicle;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
@@ -73,6 +74,18 @@ public class VehicleRepository {
         }
         return vehicleList;
     }
+
+    public List<Vehicle> getVehiclesByStatus(String statusi) {
+        Status status = Status.valueOf(statusi);
+
+        try (Session session = HibernateConn.getSessionFactory().openSession()) {
+            String hql = "FROM Vehicle v WHERE v.status = :status";
+            return session.createQuery(hql, Vehicle.class)
+                    .setParameter("status", status)
+                    .list();
+        }
+    }
+
 
 
 

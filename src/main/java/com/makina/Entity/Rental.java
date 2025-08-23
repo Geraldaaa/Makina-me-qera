@@ -34,6 +34,8 @@ public class Rental {
     @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL)
     private List<Payment> payments = new ArrayList<>();
 
+    //private Integer sasiaMakinave;
+
     public Rental(){};
 
     public Rental(Customer customer, Vehicle vehicle, Date startDate, Date endDate) {
@@ -41,6 +43,7 @@ public class Rental {
         this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
+
     }
 
     public Long getId() {
@@ -92,6 +95,7 @@ public class Rental {
     public void setPayments(List<Payment> payments) {
         this.payments = payments;
     }
+
 
 
     @Override

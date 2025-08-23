@@ -13,14 +13,16 @@
         <property name="hibernate.hbm2ddl.auto">update</property>
 
         <!-- Show SQL queries -->
-        <property name="hibernate.show_sql">false</property>
-        <property name="hibernate.format_sql">false</property>
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
 
         <!-- Entitetet -->
         <mapping class="com.makina.Entity.Customer"/>
         <mapping class="com.makina.Entity.Vehicle"/>
         <mapping class="com.makina.Entity.Rental"/>
         <mapping class="com.makina.Entity.Payment"/>
+        <mapping class="com.makina.Entity.Inventori"/>
+
 
 
 
