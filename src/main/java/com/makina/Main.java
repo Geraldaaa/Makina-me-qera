@@ -49,7 +49,7 @@ public class Main {
 
 
         Raporti raporti = new Raporti();
-       // System.out.println(raporti.countAvailableVehicles());
+       //System.out.println(raporti.countAvailableVehicles());
         //raporti.showVehicleStats();
 
 

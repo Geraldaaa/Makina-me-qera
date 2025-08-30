@@ -34,7 +34,6 @@ public class VehicleRepository {
         }
     }
 
-
     public static Boolean findTarget(Vehicle v) {
         Transaction t = null;
         Session s = HibernateConn.getSessionFactory().openSession();
@@ -49,7 +48,6 @@ public class VehicleRepository {
             }
         return false;
     }
-
 
     public void updateVehicle(Vehicle v){
         Transaction t=null;
