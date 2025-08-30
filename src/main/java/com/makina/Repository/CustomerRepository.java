@@ -13,7 +13,19 @@ public class CustomerRepository {
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
-            s.save(customer);
+
+            Customer ekzistues = s.createQuery(
+                            "FROM Customer c WHERE c.email = :email", Customer.class)
+                    .setParameter("email", customer.getEmail())
+                    .uniqueResult();
+
+            if ( findTarget(customer) == true) {
+                System.out.println("Ky customer ekziston " + customer.getEmail());
+                return;
+            } else {
+                s.save(customer);
+                System.out.println("Customer u shtua");
+            }
             t.commit();
 
         } catch(Exception e){
@@ -21,6 +33,20 @@ public class CustomerRepository {
             e.printStackTrace();}
     }
 
+    public static Boolean findTarget(Customer c) {
+        Transaction t = null;
+        Session s = HibernateConn.getSessionFactory().openSession();
+        t = s.beginTransaction();
+        Customer customer = s.createQuery(
+                        "FROM Customer c WHERE c.email = :email", Customer.class)
+                .setParameter("email", c.getEmail())
+                .uniqueResult();
+
+        if (customer != null) {
+            return true;
+        }
+        return false;
+    }
 
     public void updateCustomer(Customer customer){
         Transaction t=null;
@@ -65,4 +91,7 @@ public class CustomerRepository {
         }
         return customer;
     }
+
+
+
 }

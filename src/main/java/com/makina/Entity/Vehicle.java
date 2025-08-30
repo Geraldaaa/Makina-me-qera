@@ -1,9 +1,6 @@
 package com.makina.Entity;
 
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
-
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,12 +14,16 @@ public class Vehicle {
     private Long id;
 
     @OneToMany(mappedBy = "vehicle", cascade = CascadeType.ALL)
-    private List<Rental> rentals = new ArrayList<>();
+    private List<RentedItems> RentedItems = new ArrayList<>();
 
     private String brand;
     private String model;
+
+    @Column(unique=true)
+    private String targa;
     private Integer year;
     private Double dailyRate;
+    private Double price;
 
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -32,13 +33,24 @@ public class Vehicle {
     public Vehicle() {
     }
 
-    public Vehicle(String brand, String model, Integer year, Double dailyRate, Status status) {
+    public Vehicle(String brand, String model, String targa, Integer year, Double dailyRate,  Double price, Status status) {
         this.brand = brand;
         this.model = model;
+        this.targa = targa;
         this.year = year;
         this.dailyRate = dailyRate;
         this.status = status;
+        this.price = price;
 
+    }
+
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     public Long getId() {
@@ -94,7 +106,6 @@ public class Vehicle {
     public String toString() {
         return "Vehicle{" +
                 "id=" + id +
-                ", rentals=" + rentals +
                 ", brand='" + brand + '\'' +
                 ", model='" + model + '\'' +
                 ", year=" + year +
@@ -103,14 +114,20 @@ public class Vehicle {
                 '}';
     }
 
-    public List<Rental> getRentals() {
-        return rentals;
+    public String getTarga() {
+        return targa;
     }
 
-    public void setRentals(List<Rental> rentals) {
-        this.rentals = rentals;
+    public void setTarga(String targa) {
+        this.targa = targa;
     }
 
+    public List<RentedItems> getRentedItems() {
+        return RentedItems;
+    }
 
+    public void setRentedItems(List<RentedItems> rentedItems) {
+        RentedItems = rentedItems;
+    }
 }
 

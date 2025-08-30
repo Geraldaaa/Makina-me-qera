@@ -16,14 +16,14 @@ public class Rental {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date startDate;
-    private Date endDate;
+    private  Date startDate;
+    private  Date endDate;
+    @Enumerated (EnumType.STRING)
+    private StatusiQirasë statusiQirasë;
 
 
-    @ManyToOne
-    @JoinColumn(name = "vehicle_id")
-    private Vehicle vehicle;
-
+    @OneToMany(mappedBy = "rental", cascade = CascadeType.ALL)
+    private List<RentedItems> RentedItems = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "customer_id")
@@ -38,13 +38,22 @@ public class Rental {
 
     public Rental(){};
 
-    public Rental(Customer customer, Vehicle vehicle, Date startDate, Date endDate) {
+    public Rental(Customer customer, Date startDate, Date endDate, StatusiQirasë statusiQirasë) {
         this.customer = customer;
-        this.vehicle = vehicle;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.statusiQirasë = statusiQirasë;
 
     }
+
+   /* public static Integer llogaritjaDiteve(){
+        return   startDate.getDate() - endDate.getDate();
+    }
+
+    public  Double llogaritPagesen(){
+        return vehicle.getPrice() * llogaritjaDiteve();
+
+    }*/
 
     public Long getId() {
         return id;
@@ -70,16 +79,6 @@ public class Rental {
         this.endDate = endDate;
     }
 
-
-
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
-
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
-
     public Customer getCustomer() {
         return customer;
     }
@@ -96,7 +95,21 @@ public class Rental {
         this.payments = payments;
     }
 
+    public StatusiQirasë getStatusiQirasë() {
+        return statusiQirasë;
+    }
 
+    public void setStatusiQirasë(StatusiQirasë statusiQirasë) {
+        this.statusiQirasë = statusiQirasë;
+    }
+
+    public List<RentedItems> getRentedItems() {
+        return RentedItems;
+    }
+
+    public void setRentedItems(List<RentedItems> rentedItems) {
+        RentedItems = rentedItems;
+    }
 
     @Override
     public String toString() {
@@ -104,7 +117,6 @@ public class Rental {
                 "id=" + id +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
-                ", vehicle=" + vehicle +
                 ", customer=" + customer +
                 ", payments=" + payments +
                 '}';

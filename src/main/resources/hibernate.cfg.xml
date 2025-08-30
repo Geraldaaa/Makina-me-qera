@@ -22,9 +22,7 @@
         <mapping class="com.makina.Entity.Rental"/>
         <mapping class="com.makina.Entity.Payment"/>
         <mapping class="com.makina.Entity.Inventori"/>
-
-
-
+        <mapping class="com.makina.Entity.RentedItems"/>
 
 
 

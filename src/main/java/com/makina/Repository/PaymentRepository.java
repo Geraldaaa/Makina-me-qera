@@ -1,11 +1,11 @@
 package com.makina.Repository;
 
-import com.makina.Entity.Customer;
 import com.makina.Entity.Payment;
+import com.makina.Entity.Rental;
+import com.makina.Entity.Vehicle;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-
 import java.util.List;
 
 public class PaymentRepository {
@@ -14,6 +14,7 @@ public class PaymentRepository {
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
+            //payment.setAmount(llogaritPagesen(payment.getRental().getVehicle(), payment.getRental()));
             s.save(payment);
             t.commit();
 
@@ -47,7 +48,6 @@ public class PaymentRepository {
         }
     }
 
-
     public List<Payment> shfaqPayments(){
 
         Transaction t = null;
@@ -69,4 +69,14 @@ public class PaymentRepository {
         return paymentList;
 
     }
+
+    public Double llogaritPagesen(Vehicle v, Rental r){
+
+        Double cmimi = v.getPrice();
+        Integer nrDiteve = r.getStartDate().getDate() - r.getEndDate().getDate() ;
+
+        return cmimi*nrDiteve;
+
+    }
 }
+

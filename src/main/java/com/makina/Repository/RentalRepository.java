@@ -1,30 +1,39 @@
 package com.makina.Repository;
 
-import com.makina.Entity.Customer;
 import com.makina.Entity.Rental;
+import com.makina.Entity.Status;
 import com.makina.Entity.Vehicle;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class RentalRepository {
 
 
-    public void shtoRental(Rental rental){
-        Transaction t=null;
-        try(Session s= HibernateConn.getSessionFactory().openSession()){
-            t=s.beginTransaction();
+    public void shtoRental(Rental rental) {
+        Transaction t = null;
+        try (Session s = HibernateConn.getSessionFactory().openSession()) {
+            t = s.beginTransaction();
+
+            Vehicle v = s.get(Vehicle.class, rental.getRentedItems());
+
+            if (v.getStatus() != Status.AVAILABLE) {
+                System.out.println("Makina nuk e' available");
+                return;
+            }
+
+            v.setStatus(Status.RENTED);
             s.save(rental);
+            s.update(v);
             t.commit();
 
-        } catch(Exception e){
-            if(t!=null)t.rollback();
-            e.printStackTrace();}
+        } catch (Exception e) {
+            if (t != null && t.getStatus().canRollback()) t.rollback();
+            e.printStackTrace();
+        }
     }
-
 
     public void updateRent(Rental rental){
         Transaction t=null;
@@ -70,11 +79,6 @@ public class RentalRepository {
         return rentals;
     }
 
-
-    public void rentVehicle(Vehicle vehicle){
-
-
-    }
 
 
 }

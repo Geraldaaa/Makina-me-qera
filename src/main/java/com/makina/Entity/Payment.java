@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import java.sql.Date;
 
-
 @Entity
 @Table(name = "payments")
 public class Payment {
@@ -21,13 +20,17 @@ public class Payment {
     @JoinColumn(name = "rental_id")
     private Rental rental;
 
+    @Enumerated (EnumType.STRING)
+    private StatusiPageses statusiPageses;
+
 
      public Payment(){};
 
-    public Payment(Rental rental,Double amount, Date paymentDate) {
+    public Payment(Rental rental,Double amount, Date paymentDate, StatusiPageses statusiPageses) {
         this.rental = rental;
         this.amount = amount;
         this.paymentDate = paymentDate;
+        this.statusiPageses = statusiPageses;
     }
 
 
@@ -61,6 +64,14 @@ public class Payment {
 
     public void setRental(Rental rental) {
         this.rental = rental;
+    }
+
+    public StatusiPageses getStatusiPageses() {
+        return statusiPageses;
+    }
+
+    public void setStatusiPageses(StatusiPageses statusiPageses) {
+        this.statusiPageses = statusiPageses;
     }
 
     @Override
