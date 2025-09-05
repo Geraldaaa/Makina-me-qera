@@ -8,8 +8,6 @@ import  com.makina.Entity.Rental;
 import com.makina.Entity.Payment;
 
 
-
-
 public class InventariService {
 
     //perfundon procesing e rent
@@ -18,8 +16,8 @@ public class InventariService {
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
             t = s.beginTransaction();
 
-            Inventori inventar = s.createQuery(
-                    "FROM Inventori i WHERE i.vehicle = :vehicle", Inventori.class).setParameter("vehicle", vehicle).uniqueResult();
+            Inventari inventar = s.createQuery(
+                    "FROM Inventari i WHERE i.vehicle = :vehicle", Inventari.class).setParameter("vehicle", vehicle).uniqueResult();
 
 
             vehicle.setStatus(Status.RENTED);
@@ -47,8 +45,8 @@ public class InventariService {
             Vehicle v = s.get(Vehicle.class, vehicleId);
             if (v == null) throw new RuntimeException("Makina nuk ekziston!");
 
-            Inventori inventar = s.createQuery(
-                            "FROM Inventori i WHERE i.vehicle.id = :vid", Inventori.class)
+            Inventari inventar = s.createQuery(
+                            "FROM Inventari i WHERE i.vehicle.id = :vid", Inventari.class)
                     .setParameter("vid", vehicleId)
                     .uniqueResult();
 
@@ -79,7 +77,6 @@ public class InventariService {
         }
     }
 
-
     public Double llogaritPagesen(Vehicle v, Rental r){
 
         Double cmimi = v.getPrice();
@@ -100,7 +97,7 @@ public class InventariService {
                 throw new RuntimeException("Payment me id " + paymentId + " nuk ekziston");
             }
 
-            Inventori in = s.get(Inventori.class, 1);
+            Inventari in = s.get(Inventari.class, 1);
             in.increaseQuantity(1);
 
             payment.setStatusiPageses(StatusiPageses.paid);
@@ -115,7 +112,6 @@ public class InventariService {
             e.printStackTrace();
         }
     }
-
 
 }
 

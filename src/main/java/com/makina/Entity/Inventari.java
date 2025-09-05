@@ -3,8 +3,8 @@ package com.makina.Entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "inventori")
-public class Inventori {
+@Table (name = "inventari")
+public class Inventari {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
@@ -12,7 +12,7 @@ public class Inventori {
 
     private Integer quantity;
 
-    public Inventori( Integer quantity) {
+    public Inventari( Integer quantity) {
 
         this.quantity = quantity;
 
@@ -28,11 +28,11 @@ public class Inventori {
         if (this.quantity >= amount) {
             this.quantity -= amount;
         } else {
-            System.out.println("Nuk ka mjaftueshem makina në inventar!");
+            System.out.println("Nuk ka mjaftueshem makina ne inventar");
         }
     }
 
-    public Inventori() {
+    public Inventari() {
     }
 
     public Long getId() {

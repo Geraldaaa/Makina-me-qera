@@ -46,14 +46,6 @@ public class Rental {
 
     }
 
-   /* public static Integer llogaritjaDiteve(){
-        return   startDate.getDate() - endDate.getDate();
-    }
-
-    public  Double llogaritPagesen(){
-        return vehicle.getPrice() * llogaritjaDiteve();
-
-    }*/
 
     public Long getId() {
         return id;

@@ -9,7 +9,7 @@ import java.util.List;
 
 public class InventoriRepository {
 
-    public void shtoInventar(Inventori i){
+    public void shtoInventar(Inventari i){
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
@@ -21,7 +21,7 @@ public class InventoriRepository {
             e.printStackTrace();}
     }
 
-    public void updateInventar(Inventori i){
+    public void updateInventar(Inventari i){
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
@@ -33,12 +33,11 @@ public class InventoriRepository {
             e.printStackTrace();}
     }
 
-
     public void increaseQuantity(int inventarId, int amount){
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
-            Inventori inventar = s.get(Inventori.class, inventarId);
+            Inventari inventar = s.get(Inventari.class, inventarId);
             inventar.increaseQuantity(amount);
             s.update(inventar);
             t.commit();
@@ -51,7 +50,7 @@ public class InventoriRepository {
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
-            Inventori inventar = s.get(Inventori.class, inventarId);
+            Inventari inventar = s.get(Inventari.class, inventarId);
             inventar.decreaseQuantity(amount);
             s.update(inventar);
             t.commit();
@@ -61,7 +60,7 @@ public class InventoriRepository {
     }
 
 
-    public void fshiInventar(Inventori i){
+    public void fshiInventar(Inventari i){
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
@@ -73,16 +72,16 @@ public class InventoriRepository {
             e.printStackTrace();}
     }
 
-    public List<Inventori> shfaqInventarin(){
+    public List<Inventari> shfaqInventarin(){
 
         Transaction t = null;
-        List<Inventori> listInventari= null;
+        List<Inventari> listInventari= null;
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
             t = s.beginTransaction();
-            listInventari = s.createQuery("from Inventori", Inventori.class).list();
+            listInventari = s.createQuery("from Inventori", Inventari.class).list();
             t.commit();
 
-            for (Inventori i : listInventari) {
+            for (Inventari i : listInventari) {
                 System.out.println(i);
             }
 
