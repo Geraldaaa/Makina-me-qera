@@ -2,6 +2,7 @@ package com.makina;
 
 import com.makina.Entity.*;
 import com.makina.Repository.*;
+import com.makina.Services.InventariService;
 
 import java.sql.Date;
 import java.time.LocalDate;
@@ -9,28 +10,26 @@ import java.time.LocalDate;
 public class Main {
     public static void main(String[] args) {
 
-        // Repositories
         CustomerRepository customerRepo = new CustomerRepository();
         VehicleRepository vehicleRepo = new VehicleRepository();
-        RentalRepository rentalRepo = new RentalRepository();
-        PaymentRepository paymentRepo = new PaymentRepository();
         RentedItemsRepository rentedItemsRepo = new RentedItemsRepository();
         InventoriRepository inventariRepo = new InventoriRepository();
 
+        InventariService is = new InventariService();
+
         //customer
-        Customer customer = new Customer("Ana", "g", "ana.g@test.com");
+        Customer customer = new Customer("Zoeee", "Zo", "zo@test.com");
         customerRepo.shtoCustomer(customer);
-        System.out.println("Customer u shtua: " + customer.getFirstName());
 
         // vehicle ---
-        Vehicle vehicle = new Vehicle("Toyota", "Corolla", "A123C", 2023, 50.0, 20000.0, Status.AVAILABLE);
-        vehicleRepo.shtoVehicle(vehicle);
-        System.out.println("Makina u shtua: " + vehicle.getBrand() + " " + vehicle.getModel());
+        Vehicle vehicle1 = new Vehicle("Toyota", "ToyotaModel", "Z33Z", 2023, 50.0, 200.0, Status.AVAILABLE);
+        vehicleRepo.shtoVehicle(vehicle1);
+
+        Vehicle vehicle2 = new Vehicle("Ford", " FordModel", "Z444Z", 2023, 50.0, 300.0, Status.AVAILABLE);
+        vehicleRepo.shtoVehicle(vehicle2);
 
         // inventari ---
-        // Supozojmë që ID e inventarit i cili do perditesohet është 1
         inventariRepo.increaseQuantity(1, 1);
-        System.out.println("Inventari u perditesua me +1");
 
         // rental ---
         Rental rental = new Rental(
@@ -39,30 +38,40 @@ public class Main {
                 Date.valueOf(LocalDate.now().plusDays(7)),
                 StatusiQirasë.active
         );
-        rentalRepo.shtoRental(rental);
-        System.out.println("Rental u krijua per customer: " + customer.getFirstName());
 
-        // Lidhja e vehicle me rental permes RentedItems ---
-        RentedItems rentedItem = new RentedItems();
-        rentedItem.setVehicle(vehicle);
-        rentedItem.setRental(rental);
 
-        rental.getRentedItems().add(rentedItem);
-        vehicle.getRentedItems().add(rentedItem);
+        is.startRenting(rental);
 
-        rentedItemsRepo.shtoItemRepository(rentedItem);
-        System.out.println("Makina u lidh me rental permes RentedItems");
+        RentedItems rent1 = new RentedItems(vehicle1,rental);
+        RentedItems rent2 = new RentedItems(vehicle2,rental);
 
-        //payment  ---
+        rental.getRentedItems().add(rent1);
+        rental.getRentedItems().add(rent2);
+
+        vehicle1.getRentedItems().add(rent1);
+        vehicle2.getRentedItems().add(rent2);
+
+        rentedItemsRepo.shtoItem(rent1);
+        rentedItemsRepo.shtoItem(rent2);
+
+        is.rent(rental, rental.getRentedItems().size());
+
+     //   is.ktheVehicle(7);
+        //is.ktheVehicle(8);
+
+        // --- payment ---
+        double shumaTotale = is.llogaritPagesen(rental);
         Payment payment = new Payment(
                 rental,
-                vehicle.getPrice(),
+                shumaTotale,
                 Date.valueOf(LocalDate.now()),
                 StatusiPageses.pending
         );
-        paymentRepo.shtoPayment(payment);
-        System.out.println("Payment u krijua dhe ruajtur: " + payment.getAmount());
 
-        System.out.println("Procesi i plote i marrjes me qera te nje makine perfundoi me sukses");
+        is.bejPagesen(payment);
+
+       // is.markPaymentAsPaid(1);
+
+
     }
 }

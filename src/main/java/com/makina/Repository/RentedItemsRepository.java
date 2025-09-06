@@ -1,6 +1,5 @@
 package com.makina.Repository;
 
-import com.makina.Entity.Payment;
 import com.makina.Entity.RentedItems;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
@@ -13,7 +12,7 @@ import java.util.List;
 
 public class RentedItemsRepository {
 
-    public void shtoItemRepository(RentedItems ri){
+    public void shtoItem(RentedItems ri){
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();

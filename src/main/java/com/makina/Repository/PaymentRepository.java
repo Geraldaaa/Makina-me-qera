@@ -14,7 +14,6 @@ public class PaymentRepository {
         Transaction t=null;
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
-            //payment.setAmount(llogaritPagesen(payment.getRental().getVehicle(), payment.getRental()));
             s.save(payment);
             t.commit();
 

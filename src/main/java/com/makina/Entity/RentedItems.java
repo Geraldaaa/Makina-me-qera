@@ -26,8 +26,8 @@ public class RentedItems {
     public RentedItems() {
     }
 
-    public RentedItems(Long id, Vehicle vehicle, Rental rental) {
-        this.id = id;
+    public RentedItems( Vehicle vehicle, Rental rental) {
+
         this.vehicle = vehicle;
         this.rental = rental;
     }

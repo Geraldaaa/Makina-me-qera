@@ -1,6 +1,8 @@
 package com.makina.Services;
 
 import com.makina.Entity.*;
+import com.makina.Repository.PaymentRepository;
+import com.makina.Repository.RentalRepository;
 import com.makina.util.HibernateConn;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -10,83 +12,126 @@ import com.makina.Entity.Payment;
 
 public class InventariService {
 
-    //perfundon procesing e rent
-    public void rent(Vehicle vehicle,Rental rental, Integer sasiaMakinave) {
-        Transaction t = null;
-        try (Session s = HibernateConn.getSessionFactory().openSession()) {
-            t = s.beginTransaction();
-
-            Inventari inventar = s.createQuery(
-                    "FROM Inventari i WHERE i.vehicle = :vehicle", Inventari.class).setParameter("vehicle", vehicle).uniqueResult();
-
-
-            vehicle.setStatus(Status.RENTED);
-            s.update(vehicle);
-
-           rental.setStatusiQirasë(StatusiQirasë.active);
-            s.save(rental);
-
-            inventar.decreaseQuantity(1);
-            t.commit();
-            System.out.println("Makina u dha me qera. Makina te mbetura: " + inventar.getQuantity());
-
-        } catch (Exception e) {
-            if (t != null && t.isActive()) t.rollback();
-            e.printStackTrace();
-        }
+    public void startRenting(Rental rental){
+        RentalRepository rr = new RentalRepository();
+        rr.shtoRental(rental);
     }
 
-//kthen makinen e bere rent
-    public void ktheVehicle(Long vehicleId, Integer sasiaMakinave) {
+    public void rent(Rental rental, Integer sasiaMakinave) {
         Transaction t = null;
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
             t = s.beginTransaction();
 
-            Vehicle v = s.get(Vehicle.class, vehicleId);
-            if (v == null) throw new RuntimeException("Makina nuk ekziston!");
-
-            Inventari inventar = s.createQuery(
-                            "FROM Inventari i WHERE i.vehicle.id = :vid", Inventari.class)
-                    .setParameter("vid", vehicleId)
-                    .uniqueResult();
-
-            Rental r = s.createQuery(
-                            "FROM Rental r WHERE r.vehicle.id = :vid AND r.statusiQirasë = :status", Rental.class)
-                    .setParameter("vid", vehicleId)
-                    .setParameter("status", StatusiQirasë.active)
-                    .setMaxResults(1)
-                    .uniqueResult();
-
+            Rental r = s.get(Rental.class, rental.getId());
             if (r == null) {
-                System.out.println("Nuk ekziston rental aktiv pr kete makin");
+                throw new RuntimeException("Rental me id " + rental.getId() + " nuk ekziston");
             }
 
-            v.setStatus(Status.AVAILABLE);
-            r.setStatusiQirasë(StatusiQirasë.returned);
-            s.update(v);
+            r.setStatusiQirasë(StatusiQirasë.active);
             s.update(r);
 
-            inventar.increaseQuantity(1);
-            s.update(inventar);
+            for (RentedItems ri : r.getRentedItems()) {
+                Vehicle v = s.get(Vehicle.class, ri.getVehicle().getId());
+                if (v != null) {
+                    v.setStatus(Status.RENTED);
+                    s.update(v);
+                }
+            }
+
+            Inventari i = s.get(Inventari.class, 1);
+            if (i != null) {
+                i.decreaseQuantity(sasiaMakinave);
+                s.update(i);
+            }
 
             t.commit();
-            System.out.println("Makina u kthye. Gjithsej ne stok: " + inventar.getQuantity());
         } catch (Exception e) {
             if (t != null && t.isActive()) t.rollback();
             e.printStackTrace();
         }
     }
 
-    public Double llogaritPagesen(Vehicle v, Rental r){
 
-        Double cmimi = v.getPrice();
-       Integer nrDiteve = r.getStartDate().getDate() - r.getEndDate().getDate() ;
+    public void ktheVehicle(Integer vehicleId) {
+        Transaction t = null;
+        try (Session s = HibernateConn.getSessionFactory().openSession()) {
+            t = s.beginTransaction();
 
-       return cmimi*nrDiteve;
+            setStatusiVehiclesAvailable(s,vehicleId);
+            setStatusiQeraseRenturned(s,vehicleId);
 
+            Inventari i = s.get(Inventari.class, 1);
+            i.increaseQuantity(1);
+            s.update(i);
+
+            t.commit();
+        } catch (Exception e) {
+            if (t != null && t.isActive()) t.rollback();
+            e.printStackTrace();
+        }
     }
 
-    //ben statusin e payment paid pasi eshte ber pagesa
+    public void setStatusiVehiclesAvailable(Session s, Integer vehicleId) {
+        Vehicle v = s.get(Vehicle.class, vehicleId);
+        if (v == null) {
+            System.out.println("Makina nuk ekziston");
+            return;
+        }
+        v.setStatus(Status.AVAILABLE);
+        s.update(v);
+    }
+
+
+
+    public void setStatusiQeraseRenturned(Session s, Integer vehicleId) {
+        Rental r = s.createQuery(
+                        "select r from Rental r join r.RentedItems ri " +
+                                "where ri.vehicle.id = :vid and r.statusiQirasë = :status",
+                        Rental.class)
+                .setParameter("vid", vehicleId)
+                .setParameter("status", StatusiQirasë.active)
+                .setMaxResults(1)
+                .uniqueResult();
+
+        if (r == null) {
+            System.out.println("Nuk ekziston rental aktiv për këtë makinë (id=" + vehicleId + ")");
+            return;
+        }
+
+        r.setStatusiQirasë(StatusiQirasë.returned);
+        s.update(r);
+    }
+
+    public void bejPagesen(Payment payment){
+        PaymentRepository pr = new PaymentRepository();
+        pr.shtoPayment(payment);
+        payment.setAmount(llogaritPagesen(payment.getRental()));
+    }
+    
+
+    public Double llogaritPagesen(Rental rental) {
+        Integer nrDiteve = rental.getEndDate().getDate() - rental.getStartDate().getDate()  ;
+
+        double total = 0.0;
+
+        for (RentedItems item : rental.getRentedItems()) {
+            Vehicle v = item.getVehicle();
+            
+            if (v != null) {
+                if(nrDiteve>7){
+                    total += nrDiteve * v.getPrice()* 0.01;
+                }
+
+                total += nrDiteve * v.getPrice();
+
+            }
+        }
+
+        return total;
+    }
+
+
+
     public void markPaymentAsPaid(int paymentId) {
         Transaction t = null;
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
@@ -102,8 +147,6 @@ public class InventariService {
 
             payment.setStatusiPageses(StatusiPageses.paid);
             s.update(payment);
-
-
 
             t.commit();
             System.out.println("Payment " + paymentId + " u be PAID.");

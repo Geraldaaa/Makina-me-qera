@@ -14,11 +14,6 @@ public class CustomerRepository {
         try(Session s= HibernateConn.getSessionFactory().openSession()){
             t=s.beginTransaction();
 
-            Customer ekzistues = s.createQuery(
-                            "FROM Customer c WHERE c.email = :email", Customer.class)
-                    .setParameter("email", customer.getEmail())
-                    .uniqueResult();
-
             if ( findTarget(customer) == true) {
                 System.out.println("Ky customer ekziston " + customer.getEmail());
                 return;
