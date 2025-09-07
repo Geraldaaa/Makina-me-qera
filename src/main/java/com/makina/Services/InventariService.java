@@ -51,7 +51,6 @@ public class InventariService {
         }
     }
 
-
     public void ktheVehicle(Integer vehicleId) {
         Transaction t = null;
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
@@ -81,8 +80,6 @@ public class InventariService {
         s.update(v);
     }
 
-
-
     public void setStatusiQeraseRenturned(Session s, Integer vehicleId) {
         Rental r = s.createQuery(
                         "select r from Rental r join r.RentedItems ri " +
@@ -107,7 +104,6 @@ public class InventariService {
         pr.shtoPayment(payment);
         payment.setAmount(llogaritPagesen(payment.getRental()));
     }
-    
 
     public Double llogaritPagesen(Rental rental) {
         Integer nrDiteve = rental.getEndDate().getDate() - rental.getStartDate().getDate()  ;
@@ -119,18 +115,16 @@ public class InventariService {
             
             if (v != null) {
                 if(nrDiteve>7){
-                    total += nrDiteve * v.getPrice()* 0.01;
+                    total += nrDiteve * v.getPrice()* 0.9; //me ulje
+                }else{
+                    total += nrDiteve * v.getPrice();
                 }
-
-                total += nrDiteve * v.getPrice();
 
             }
         }
 
         return total;
     }
-
-
 
     public void markPaymentAsPaid(int paymentId) {
         Transaction t = null;

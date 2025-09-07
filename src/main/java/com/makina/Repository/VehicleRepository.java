@@ -98,40 +98,6 @@ public class VehicleRepository {
         return vehicleList;
     }
 
-    public List<Vehicle> getVehiclesByStatus(String statusi) {
-        Status status = Status.valueOf(statusi);
-
-        try (Session session = HibernateConn.getSessionFactory().openSession()) {
-            String hql = "FROM Vehicle v WHERE v.status = :status";
-            return session.createQuery(hql, Vehicle.class)
-                    .setParameter("status", status)
-                    .list();
-        }
-    }
-
-    public List<Vehicle> getVehiclesByCustomer(Long customerId) {
-
-        List<Vehicle> vehicles = new ArrayList<>();
-        Transaction t = null;
-        try (Session s = HibernateConn.getSessionFactory().openSession()) {
-            t = s.beginTransaction();
-            vehicles = s.createQuery("SELECT r.vehicle FROM Rental r WHERE r.customer.id = :customerId", Vehicle.class
-                    ).setParameter("customerId", customerId)
-                    .list();
-            t.commit();
-
-        } catch (Exception e) {
-            if (t != null && t.getStatus().canRollback()) {
-                t.rollback();
-            }
-            e.printStackTrace();
-        }
-        return vehicles;
-    }
-
-
-
-
 
 
 

@@ -14,7 +14,12 @@ public class RentalRepository {
         Transaction t = null;
         try (Session s = HibernateConn.getSessionFactory().openSession()) {
             t = s.beginTransaction();
-            s.save(rental);
+
+            if(rental.getStartDate().before(rental.getEndDate())){
+                s.save(rental);
+            }else{
+                System.out.println("Vendosja e datave nuk eshten korrekte.");
+            }
             t.commit();
 
         } catch (Exception e) {
