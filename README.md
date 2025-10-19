@@ -37,6 +37,3 @@ The system follows a modular structure divided into entities, repositories, and 
 - **Scalable Structure** – Suitable for future GUI or web-based frontends  
 
 ---
-
-
-📦 *Developed by Geralda Cekrezi – Focused on clean architecture, maintainability, and scalability.*
